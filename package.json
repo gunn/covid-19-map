@@ -1,0 +1,24 @@
+{
+  "name": "covid-maps",
+  "version": "0.0.1",
+  "main": "index.tsx",
+  "repository": "https://github.com/gunn/covid-maps",
+  "homepage": "https://covid.everdb.net",
+  "author": "Arthur Gunn",
+  "license": "MIT",
+  "private": true,
+  "scripts": {
+    "start": "parcel index.html"
+  },
+  "devDependencies": {
+    "@types/react": "^16.9.34",
+    "@types/react-dom": "^16.9.6",
+    "less": "^3.11.1",
+    "parcel-bundler": "^1.12.4",
+    "typescript": "^3.8.3"
+  },
+  "dependencies": {
+    "react": "^16.13.1",
+    "react-dom": "^16.13.1"
+  }
+}
