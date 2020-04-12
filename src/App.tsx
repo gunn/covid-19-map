@@ -35,13 +35,35 @@ const DataStore = new class {
 
   adjustedForTimeOfDay(date) {
     const dayNumber = this.dayNumberForDate(date)
+
+    const proportion = ((+date - +this.first) % ONE_DAY)/ONE_DAY
+    console.log({proportion})
+
     const day1 = this.rowsByDayNumber[dayNumber]
     const day2 = this.rowsByDayNumber[dayNumber+1]
 
-    if (!day2) return day1 || []
+    function blendRowData(a: Row, b: Row) {
+      const data = {}
+      ;["cases", "deaths", "casesPer100K", "deathsPer100K"].forEach(field=> {
+        data[field] = ((a?.[field]||0)*(1-proportion)) + (b[field]*proportion)
+      })
+      ;["cases", "deaths"].forEach(field=> {
+        data[field] = Math.round(data[field])
+      })
+      return data
+    }
 
-    // TODO: adjust figures by interpolating between days
-    return day1 || []
+    if (!day1 || !day2) return day1 || day2 || []
+
+    const adjusted = day2.map(row2=> {
+      const row1 = this.rowsByIdByDayNumber[dayNumber][this.idForRow(row2)]
+      return ({
+        ...row2,
+        ...blendRowData(row1, row2)
+      })
+    })
+
+    return adjusted
   }
 
   replaceRows(rows: Row[]) {
