@@ -24,6 +24,7 @@ const DataStore = new class {
   rowsByIdByDayNumber: {[key: string]: Row}[] = []
   first: Date
   last: Date
+  maxStats = {}
 
   dayNumberForDate(date: Date): number {
     return Math.floor((+date - +this.first)/ONE_DAY)
@@ -37,7 +38,6 @@ const DataStore = new class {
     const dayNumber = this.dayNumberForDate(date)
 
     const proportion = ((+date - +this.first) % ONE_DAY)/ONE_DAY
-    console.log({proportion})
 
     const day1 = this.rowsByDayNumber[dayNumber]
     const day2 = this.rowsByDayNumber[dayNumber+1]
@@ -78,6 +78,8 @@ const DataStore = new class {
     const byNum = []
     const byIdByNum = []
 
+    this.maxStats = { lat: 35, long: -40, deaths: 0, cases: 0, deathsPer100K: 0, casesPer100K: 0 }
+
     rows.forEach(row=> {
       RegionsStore.add(row)
 
@@ -88,11 +90,14 @@ const DataStore = new class {
 
       byIdByNum[dayNumber] || (byIdByNum[dayNumber] = {})
       byIdByNum[dayNumber][this.idForRow(row)] = row
+
+      ;["cases", "deaths", "casesPer100K", "deathsPer100K"].forEach(field=>
+        (row[field]>this.maxStats[field]) && (this.maxStats[field]=row[field])
+      )
     })
 
     this.rowsByDayNumber     = byNum
     this.rowsByIdByDayNumber = byIdByNum
-
     // this.zeroFillRows()
   }
 
@@ -166,7 +171,10 @@ export default ()=> {
     forceUpdate(Math.random())
   })()}, [])
 
-  const data = processForMap(DataStore.adjustedForTimeOfDay(value))
+  let rows = DataStore.adjustedForTimeOfDay(value)
+  if (rows.length) rows = rows.concat(DataStore.maxStats)
+  const data = processForMap(rows)
+
   const renderControl = !!(start && end && value)
 
   return (
