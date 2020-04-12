@@ -15,10 +15,13 @@ type Row = {
   casesPer100K: number
   deathsPer100K: number
   date: string
+
+  fips: string
 }
 const DataStore = new class {
   rows: Row[] = []
   rowsByDayNumber: Row[][] = []
+  rowsByIdByDayNumber: {[key: string]: Row}[] = []
   first: Date
   last: Date
 
@@ -46,19 +49,83 @@ const DataStore = new class {
 
     const dates = rows.map(d=> +new Date(d.date))
 
-    console.log(dates.filter(d=> !d))
-
     this.first = new Date(Math.min(...dates))
     this.last  = new Date(Math.max(...dates))
 
-    this.rowsByDayNumber = rows.reduce((obj, row)=> {
+
+    const byNum = []
+    const byIdByNum = []
+
+    rows.forEach(row=> {
+      RegionsStore.add(row)
+
       const dayNumber = this.dayNumberForDate(new Date(row.date))
-      obj[dayNumber] || (obj[dayNumber] = [])
-      obj[dayNumber].push(row)
-      return obj
-    }, [])
+
+      byNum[dayNumber] || (byNum[dayNumber] = [])
+      byNum[dayNumber].push(row)
+
+      byIdByNum[dayNumber] || (byIdByNum[dayNumber] = {})
+      byIdByNum[dayNumber][this.idForRow(row)] = row
+    })
+
+    this.rowsByDayNumber     = byNum
+    this.rowsByIdByDayNumber = byIdByNum
+
+    // this.zeroFillRows()
+  }
+
+  zeroFillRows() {
+    const zeroData = { deaths: 0, cases: 0, deathsPer100K: 0, casesPer100K: 0 }
+    const lastDay = this.rowsByDayNumber[this.dayNumberForDate(this.last)]
+
+    RegionsStore.all.forEach(region=> {
+      const id = this.idForRow(region)
+
+      for (let i=0; i<this.rowsByDayNumber.length; i++) {
+        if (!this.rowsByIdByDayNumber[i][id]) {
+          const date = this.rowsByDayNumber[i][0].date
+          const zeroRow = {...region, ...zeroData, date}
+          this.rowsByIdByDayNumber[i][id] = zeroRow
+          this.rowsByDayNumber[i].push(zeroRow)
+        }
+      }
+    })
+  }
+
+  idForRow(row: Row) {
+    return row.fips
   }
 }
+
+type Region = {
+  state: string
+  subregion: string
+  lat: number
+  long: number
+  population: number
+
+  fips: string
+}
+const RegionsStore = new class {
+  all: Region[] = []
+  byId: {[key: string]: Region} = {}
+
+  add(region: Region) {
+    const id = this.idForRegion(region)
+    if (!this.byId[id]) {
+      this.byId[id] = region
+      this.all.push(region)
+    }
+  }
+
+  idForRegion(region: Region): string {
+    return region.fips
+  }
+}
+
+
+
+window["DataStore"] = DataStore
 
 
 export default ()=> {
@@ -78,11 +145,7 @@ export default ()=> {
   })()}, [])
 
   const data = processForMap(DataStore.adjustedForTimeOfDay(value))
-
-
-
   const renderControl = !!(start && end && value)
-  console.log(value)
 
   return (
     <>
