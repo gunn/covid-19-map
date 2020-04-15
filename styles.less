@@ -12,7 +12,7 @@ html, body {
 .date-control {
   width: 100%;
   position: fixed;
-  bottom: 60px;
+  bottom: 50px;
   padding: 10px 30px;
   box-sizing: border-box;
 
@@ -27,16 +27,25 @@ h3 {
   display: flex;
   justify-content: space-between;
   align-items: flex-end;
+  font-size: 1.8em;
+  margin: 15px 0;
+}
 
-  .date {
-    font-size: 1.8em;
-  }
+.edb-link {
+  font-size: 1.2em;
+  color: #CCC5;
+  font-style: italic;
+  text-decoration: none;
 
-  .edb-link {
-    text-decoration: none;
-    color: #CCC5;
-    font-style: italic;
+  &:hover {
+    text-decoration: underline;
   }
+}
+
+
+
+input[type=range] {
+  padding-top: 20px;
 }
 
 
@@ -45,8 +54,8 @@ h3 {
 @thumb-color: #2741b1;
 
 @thumb-radius: 40px;
-@thumb-height: 40px;
-@thumb-width:  40px;
+@thumb-height: 30px;
+@thumb-width:  30px;
 @thumb-shadow-size: 1px;
 @thumb-shadow-blur: 1px;
 @thumb-shadow-color: #111;
@@ -54,7 +63,7 @@ h3 {
 @thumb-border-color: none;
 
 @track-width: 100%;
-@track-height: 15px;
+@track-height: 10px;
 @track-shadow-size: 2px;
 @track-shadow-blur: 2px;
 @track-shadow-color: #222;

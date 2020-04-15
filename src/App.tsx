@@ -60,15 +60,19 @@ const DateControl = ({start, end, value, onChange}: DateControlProps)=> {
 
   return (
     <div className="date-control">
-      <h3 style={{textAlign: "right"}}>
-        <a href="https://covid.everdb.net" className="edb-link">
-          covid.everdb.net
-        </a>
+      <h3>
+        <span className="title">
+          USA deaths per 100K
+        </span>
 
         <span className="date">
           { value.getDate() } { MONTHS[value.getMonth()] } 2020
         </span>
       </h3>
+
+      <a href="https://covid.everdb.net" className="edb-link">
+        covid.everdb.net
+      </a>
 
       <input
         type="range"
