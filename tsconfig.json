@@ -1,5 +1,9 @@
 {
   "compilerOptions": {
-    "jsx": "react"
+    "jsx": "react",
+    "allowJs": true,
+    "moduleResolution": "node",
+    "noEmit": true,
+    "target": "es2019"
   }
 }

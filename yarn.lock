@@ -4192,6 +4192,11 @@ image-size@~0.5.0:
   resolved "https://registry.yarnpkg.com/image-size/-/image-size-0.5.5.tgz#09dfd4ab9d20e29eb1c3e80b8990378df9e3cb9c"
   integrity sha1-Cd/Uq50g4p6xw+gLiZA3jfnjy5w=
 
+"immer@>=1.8.0 <4.0.0":
+  version "3.3.0"
+  resolved "https://registry.yarnpkg.com/immer/-/immer-3.3.0.tgz#ee7cf3a248d5dd2d4eedfbe7dfc1e9be8c72041d"
+  integrity sha512-vlWRjnZqoTHuEjadquVHK3GxsXe1gNoATffLEA8Qbrdd++Xb+wHEFiWtwAKTscMBoi1AsvEMXhYRzAXA8Ex9FQ==
+
 import-fresh@^2.0.0:
   version "2.0.0"
   resolved "https://registry.yarnpkg.com/import-fresh/-/import-fresh-2.0.0.tgz#d81355c15612d386c61f9ddd3922d4304822a546"
@@ -6293,6 +6298,13 @@ punycode@^2.1.0, punycode@^2.1.1:
   version "2.1.1"
   resolved "https://registry.yarnpkg.com/punycode/-/punycode-2.1.1.tgz#b58b010ac40c22c5657616c8d2c2c02c7bf479ec"
   integrity sha512-XRsRjdf+j5ml+y/6GKHPZbrF/8p2Yga0JPtdqTIY2Xe5ohJPD9saDJJLPvp9+NSBprVvevdXZybnj2cv8OEd0A==
+
+pure-store@^0.3.6:
+  version "0.3.6"
+  resolved "https://registry.yarnpkg.com/pure-store/-/pure-store-0.3.6.tgz#572d9a618b27878ce247ce4ede67c0025a843718"
+  integrity sha512-JTjgyk6Txq1nRqB3u4PgWfLvCHMI9DpwljKERW/0GB00ftN7AWIwq0UfO3gjjz7sw9g8HVg7wU05TPphcypIPw==
+  dependencies:
+    immer ">=1.8.0 <4.0.0"
 
 purgecss@^1.4.0:
   version "1.4.2"

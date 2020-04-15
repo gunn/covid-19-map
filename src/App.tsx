@@ -1,46 +1,67 @@
 import * as React from 'react'
 import Map from './Map'
 import { StatsStore, Row } from './stats-store'
+import createStore, { PureStore } from 'pure-store'
 
+
+const store = createStore({
+  title: "",
+  date: new Date(2020, 3)
+})
+
+
+function useForceUpdate() {
+  return React.useReducer(() => ({}), {})[1] as () => void
+}
+
+function usePureStore<S, T>(store: PureStore<S, T>) {
+  const forceUpdate = useForceUpdate()
+
+  React.useEffect(()=> {
+    const unsubscribe = store.subscribe(forceUpdate)
+    return unsubscribe
+  }, [])
+
+  return [store.state, store.update] as [T, (updater: Partial<T> | ((e: T) => void))=> void]
+}
 
 
 export default ()=> {
-  const start = DataStore.first
-  const end   = DataStore.last
+  const [{ date }, update] = usePureStore(store)
+  const forceUpdate = useForceUpdate()
 
-  const [value, setValue] = React.useState(new Date(2020, 3))
-  const [_, forceUpdate] = React.useState(0)
+  const start = StatsStore.first
+  const end   = StatsStore.last
+  // const start = new Date(2020, 0)
+  // const end   = new Date(2020, 4)
 
   React.useEffect(()=> {(async ()=> {
     const resp = await fetch("http://127.0.0.1:8080/outputs/nyt.json")
     const rawData = await resp.json()
 
-    // setData(processForMap(rawData))
-    DataStore.replaceRows(rawData)
-    forceUpdate(Math.random())
+    StatsStore.replaceRows(rawData)
+    forceUpdate()
   })()}, [])
 
-  let rows = DataStore.adjustedForTimeOfDay(value)
-  if (rows.length) rows = rows.concat(DataStore.maxStats as Row)
+  let rows = StatsStore.adjustedForTimeOfDay(date)
+  if (rows.length) rows = rows.concat(StatsStore.maxStats as Row)
   const data = processForMap(rows)
 
-  const renderControl = !!(start && end && value)
+  const renderControl = !!(start && end && date)
 
   return (
     <>
       <Map
         endDate={end}
-        date={value}
+        date={date}
         data={data}
       />
 
       {
         renderControl &&
-        <DateControl
+        <BottomControls
           start={start}
           end={end}
-          value={value}
-          onChange={setValue}
         />
       }
     </>
@@ -50,23 +71,26 @@ export default ()=> {
 
 const MONTHS = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"]
 
-type DateControlProps = {
+type BottomControlsProps = {
   start: Date
   end: Date
-  value: Date
-  onChange: (Function)=> void
 }
-const DateControl = ({start, end, value, onChange}: DateControlProps)=> {
+const BottomControls = ({start, end}: BottomControlsProps)=> {
+  const [{ title, date }, update] = usePureStore(store)
 
   return (
-    <div className="date-control">
+    <div className="bottom-controls">
       <h3>
         <span className="title">
-          USA deaths per 100K
+          <EditInPlace
+            value={title}
+            placeholder="Click to edit title, press enter to confirm"
+            onChange={title=> update({ title })}
+          />
         </span>
 
         <span className="date">
-          { value.getDate() } { MONTHS[value.getMonth()] } 2020
+          { date.getDate() } { MONTHS[date.getMonth()] } 2020
         </span>
       </h3>
 
@@ -74,16 +98,67 @@ const DateControl = ({start, end, value, onChange}: DateControlProps)=> {
         covid.everdb.net
       </a>
 
-      <input
-        type="range"
-        value={value.getTime()}
-        onChange={e=> onChange(new Date(Math.floor(+e.target.value)))}
-        min={start.getTime()}
-        max={end.getTime()}
-      />
+      <div className="date-control">
+        <input
+          type="range"
+          value={date.getTime()}
+          onChange={e=> update({ date: new Date(Math.floor(+e.target.value)) })}
+          min={start.getTime()}
+          max={end.getTime()}
+        />
+      </div>
     </div>
   )
 }
+
+
+type EditInPlaceProps = {
+  value: string
+  placeholder: string
+  onChange: (text: string)=> void
+}
+const EditInPlace = React.memo(({value, placeholder, onChange}: EditInPlaceProps)=> {
+  const [editing, setEditing] = React.useState(false)
+
+  function onInput(e: React.KeyboardEvent<HTMLInputElement>) {
+    if (e.key=="Enter") {
+      onChange((e.target as HTMLInputElement).value)
+      setEditing(false)
+    } else if (e.key=="Escape") {
+      setEditing(false)
+    }
+  }
+
+  if (editing) {
+    return (
+      <span className="edit-in-place">
+        <input
+          type="text"
+          defaultValue={value}
+          onKeyDown={onInput}
+          style={{
+            color: "inherit",
+            font: "inherit",
+            borderWidth: 1,
+            borderStyle: "solid"
+          }}
+        />
+      </span>
+    )
+  }
+
+  return (
+    <span
+      className="edit-in-place"
+      onClick={()=> setEditing(true)}
+      style={{
+        opacity: value ? 1 : 0.5
+      }}
+    >
+      { value || placeholder }
+    </span>
+  )
+})
 
 
 
