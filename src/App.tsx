@@ -69,10 +69,11 @@ export default ()=> {
 
         if (resp.ok) {
           const edbData = await resp.json()
+          const { name, date, dataSource, config } = edbData
           return (
             update({
-              ...edbData,
-              date: new Date(edbData.date)
+              ...{name, dataSource, config},
+              date: new Date(date)
             })
           )
         }
@@ -130,7 +131,7 @@ const BottomControls = ({start, end, onSave}: BottomControlsProps)=> {
     const id = await onSave()
     if (id) {
       window.history?.pushState({}, null, `/?mapId=${id}`)
-      alert(`Share this map as: http://covid.everdb.net/map?mapId=${id}`)
+      alert(`Share this map as: https://covid.everdb.net/map?mapId=${id}`)
     }
     setSaving(false)
   }
@@ -191,7 +192,6 @@ const ProgressButton = React.memo(({text, loading=false, onClick}: ProgressButto
   return (
     <div className="progress-button" style={{width: 50}} onClick={onClick}>
       { loading ? svg : text }
-      {/* { svg } */}
     </div>
   )
 })

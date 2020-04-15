@@ -62,8 +62,6 @@ const Map = React.memo(({data, endDate, date, config, configGetter}: MapProps)=>
       const mapToLoad = firstRun ? initialMapToLoad : {}
       firstRun = false
 
-      const bearing = (-40 + ((+endDate)-(+date))/86400000) || 0
-
       dispatch(
         addDataToMap({
           ...mapToLoad,
@@ -93,8 +91,7 @@ const Map = React.memo(({data, endDate, date, config, configGetter}: MapProps)=>
 
       dispatch(
         updateMap({
-          ...mapState,
-          bearing
+          ...mapState
         })
       )
     }
