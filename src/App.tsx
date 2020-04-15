@@ -1,6 +1,6 @@
 import * as React from 'react'
 import Map from './Map'
-import { DataStore, Row } from './data-stores'
+import { StatsStore, Row } from './stats-store'
 
 
 

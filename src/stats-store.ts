@@ -15,7 +15,7 @@ type Row = {
 
   fips: string
 }
-const DataStore = new class {
+const StatsStore = new class {
   rows: Row[] = []
   rowsByDayNumber: Row[][] = []
   rowsByIdByDayNumber: {[key: string]: Row}[] = []
@@ -116,7 +116,7 @@ const DataStore = new class {
     })
   }
 
-  idForRow(row: Row) {
+  idForRow(row: Row|Region) {
     return row.fips
   }
 }
@@ -150,11 +150,11 @@ const RegionsStore = new class {
 
 
 
-window["DataStore"] = DataStore
+window["StatsStore"] = StatsStore
 
 
 export {
   Row,
-  DataStore,
+  StatsStore,
   RegionsStore
 }
