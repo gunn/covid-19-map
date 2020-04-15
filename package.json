@@ -9,7 +9,7 @@
   "private": true,
   "scripts": {
     "start": "parcel index.html",
-    "build": "parcel build index.html --no-source-maps --public-path ./"
+    "build": "parcel build index.html --no-source-maps --public-url ./"
   },
   "devDependencies": {
     "@types/react": "^16.9.34",
