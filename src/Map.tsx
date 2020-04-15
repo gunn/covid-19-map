@@ -14,7 +14,7 @@ const reducers = combineReducers({
   keplerGl: keplerGlReducer
 })
 
-const store = createStore(reducers, {}, applyMiddleware(taskMiddleware))
+const keplerStore = createStore(reducers, {}, applyMiddleware(taskMiddleware))
 
 
 type MapProps = {
@@ -25,7 +25,7 @@ type MapProps = {
   configGetter: React.MutableRefObject<Function>
 }
 export default (props: MapProps)=> (
-  <Provider store={store}>
+  <Provider store={keplerStore}>
     <Map {...props} />
   </Provider>
 )
@@ -51,14 +51,14 @@ const Map = React.memo(({data, endDate, date, config, configGetter}: MapProps)=>
       dispatch(addDataToMap(initialMapToLoad))
 
       configGetter.current = ()=> (
-        KeplerGlSchema.getConfigToSave(store.getState().keplerGl["covid"])
+        KeplerGlSchema.getConfigToSave(keplerStore.getState().keplerGl["covid"])
       )
     }
   }, [config])
 
   React.useEffect(() => {
     if (config && data?.rows.length) {
-      const currentConfig = KeplerGlSchema.getConfigToSave(store.getState().keplerGl["covid"])
+      const currentConfig = KeplerGlSchema.getConfigToSave(keplerStore.getState().keplerGl["covid"])
       const mapToLoad = firstRun ? initialMapToLoad : {}
       firstRun = false
 

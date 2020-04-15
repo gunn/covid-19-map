@@ -1,6 +1,6 @@
 import * as React from 'react'
 import Map from './Map'
-import { StatsStore, Row } from './stats-store'
+import { StatsStore, Row, processForMap } from './stats-store'
 import createStore, { PureStore } from 'pure-store'
 
 import { EditInPlace, ProgressButton} from './components'
@@ -177,29 +177,6 @@ const BottomControls = ({start, end, onSave}: BottomControlsProps)=> {
       </div>
     </div>
   )
-}
-
-
-function processForMap(rawData: any[]) {
-  const fields = [ 
-    {name: 'state',         type: 'string'},
-    {name: 'subregion',     type: 'string'},
-    {name: 'lat',           type: 'real'},
-    {name: 'long',          type: 'real'},
-    {name: 'population',    type: 'integer'},
-    {name: 'cases',         type: 'integer'},
-    {name: 'deaths',        type: 'integer'},
-    {name: 'casesPer100K',  type: 'real'},
-    {name: 'deathsPer100K', type: 'real'},
-    {name: 'date',          type: 'timestamp'},
-  ]
-
-  const fieldNames = fields.map(d=> d.name)
-  const rows = rawData.map(rowObj=>
-    fieldNames.map(name=> rowObj[name])
-  )
-  
-  return { fields, rows }
 }
 
 

@@ -149,12 +149,32 @@ const RegionsStore = new class {
 }
 
 
+function processForMap(rawData: any[]) {
+  const fields = [ 
+    {name: 'state',         type: 'string'},
+    {name: 'subregion',     type: 'string'},
+    {name: 'lat',           type: 'real'},
+    {name: 'long',          type: 'real'},
+    {name: 'population',    type: 'integer'},
+    {name: 'cases',         type: 'integer'},
+    {name: 'deaths',        type: 'integer'},
+    {name: 'casesPer100K',  type: 'real'},
+    {name: 'deathsPer100K', type: 'real'},
+    {name: 'date',          type: 'timestamp'},
+  ]
 
-window["StatsStore"] = StatsStore
+  const fieldNames = fields.map(d=> d.name)
+  const rows = rawData.map(rowObj=>
+    fieldNames.map(name=> rowObj[name])
+  )
+  
+  return { fields, rows }
+}
 
 
 export {
   Row,
   StatsStore,
-  RegionsStore
+  RegionsStore,
+  processForMap
 }
