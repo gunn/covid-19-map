@@ -18,6 +18,8 @@ const store = createStore(reducers, {}, applyMiddleware(taskMiddleware))
 
 
 type MapProps = {
+  endDate: Date
+  date: Date
   data: any
 }
 export default (props: MapProps)=> (
@@ -28,8 +30,9 @@ export default (props: MapProps)=> (
 
 
 let firstRun = true
+let startTime
 
-const Map = React.memo(({data}: MapProps)=> {
+const Map = React.memo(({data, endDate, date}: MapProps)=> {
   const dispatch = useDispatch()
   const [_, forceUpdate] = React.useState(0)
 
@@ -43,7 +46,10 @@ const Map = React.memo(({data}: MapProps)=> {
     if (data?.rows.length) {
       const currentConfig = KeplerGlSchema.getConfigToSave(store.getState().keplerGl["covid"])
       const mapToLoad = firstRun ? initialMapToLoad : {}
+      if (firstRun) startTime = new Date()
       firstRun = false
+
+      const bearing = (-40 + ((+endDate)-(+date))/86400000) || 0
 
       dispatch(
         addDataToMap({
@@ -70,8 +76,13 @@ const Map = React.memo(({data}: MapProps)=> {
       )
 
 
+      const mapState = (firstRun ? config : currentConfig).config.mapState
+
       dispatch(
-        updateMap((firstRun ? config : currentConfig).config.mapState)
+        updateMap({
+          ...mapState,
+          bearing
+        })
       )
     }
 
