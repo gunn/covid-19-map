@@ -7,7 +7,7 @@ import { Provider, useDispatch } from 'react-redux'
 
 import KeplerGlSchema from 'kepler.gl/schemas'
 import keplerGlReducer from 'kepler.gl/reducers'
-import { addDataToMap, updateMap } from 'kepler.gl/actions'
+import { addDataToMap, updateMap, toggleSidePanel } from 'kepler.gl/actions'
 
 
 const reducers = combineReducers({
@@ -30,7 +30,6 @@ export default (props: MapProps)=> (
 
 
 let firstRun = true
-let startTime
 
 const Map = React.memo(({data, endDate, date}: MapProps)=> {
   const dispatch = useDispatch()
@@ -38,6 +37,7 @@ const Map = React.memo(({data, endDate, date}: MapProps)=> {
 
   React.useEffect(()=> {
     dispatch(addDataToMap(initialMapToLoad))
+    dispatch(toggleSidePanel())
 
     window.addEventListener("resize", ()=> forceUpdate(Math.random()))
   }, [])
@@ -46,7 +46,6 @@ const Map = React.memo(({data, endDate, date}: MapProps)=> {
     if (data?.rows.length) {
       const currentConfig = KeplerGlSchema.getConfigToSave(store.getState().keplerGl["covid"])
       const mapToLoad = firstRun ? initialMapToLoad : {}
-      if (firstRun) startTime = new Date()
       firstRun = false
 
       const bearing = (-40 + ((+endDate)-(+date))/86400000) || 0
@@ -218,7 +217,7 @@ const config = {
     },
     "mapState": {
       "bearing": 0,
-      "dragRotate": false,
+      "dragRotate": true,
       "latitude": 39.15690502140835,
       "longitude": -104.29845290568925,
       "pitch": 0,
