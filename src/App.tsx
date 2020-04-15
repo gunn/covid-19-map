@@ -57,7 +57,7 @@ export default ()=> {
 
   React.useEffect(()=> {
     (async ()=> {
-      const resp = await fetch("http://127.0.0.1:8080/outputs/nyt.json")
+      const resp = await fetch("https://storage.googleapis.com/edb-covid-files/hYSGamt4Da4ScLZiW")
       const rawData = await resp.json()
   
       StatsStore.replaceRows(rawData)
@@ -132,8 +132,8 @@ const BottomControls = ({start, end, onSave}: BottomControlsProps)=> {
     setSaving(true)
     const id = await onSave()
     if (id) {
-      window.history?.pushState({}, null, `/?mapId=${id}`)
-      alert(`Share this map as: https://covid.everdb.net/map?mapId=${id}`)
+      window.history?.pushState({}, null, `/map/?mapId=${id}`)
+      alert(`Share this map as: https://covid.everdb.net/map/?mapId=${id}`)
     }
     setSaving(false)
   }
