@@ -23,7 +23,7 @@
   },
   "dependencies": {
     "kepler.gl": "^2.1.2",
-    "pure-store": "^0.3.6",
+    "pure-store": "1.0.0",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
     "react-palm": "^3.1.2",

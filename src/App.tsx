@@ -18,20 +18,9 @@ function useForceUpdate() {
   return React.useReducer(() => ({}), {})[1] as () => void
 }
 
-function usePureStore<S, T>(store: PureStore<S, T>) {
-  const forceUpdate = useForceUpdate()
-
-  React.useEffect(()=> {
-    const unsubscribe = store.subscribe(forceUpdate)
-    return unsubscribe
-  }, [])
-
-  return [store.state, store.update] as [T, (updater: Partial<T> | ((e: T) => void))=> void]
-}
-
 
 export default ()=> {
-  const [state, update] = usePureStore(store)
+  const [state, update] = store.usePureStore()
   const { date, config } = state
   const forceUpdate = useForceUpdate()
   const configGetter = React.useRef<Function>(null)
