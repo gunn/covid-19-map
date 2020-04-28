@@ -46,7 +46,14 @@ export default ()=> {
 
   React.useEffect(()=> {
     (async ()=> {
-      const resp = await fetch("https://storage.googleapis.com/edb-covid-files/hYSGamt4Da4ScLZiW")
+      const now = new Date()
+      const utcString = ["Date", "Month", "FullYear"].map(d=> now[`getUTC${d}`]()).join("-")
+      // Bust cache every 3 hours:
+      const time = Math.round(now.getUTCHours()/3)
+
+      const searchString = [utcString, time].join("::")
+
+      const resp = await fetch("./latest.json?"+searchString)
       const rawData = await resp.json()
   
       StatsStore.replaceRows(rawData)
