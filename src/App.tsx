@@ -1,7 +1,7 @@
 import * as React from 'react'
 import Map from './Map'
 import { StatsStore, Row, processForMap } from './stats-store'
-import createStore, { PureStore } from 'pure-store'
+import createStore from 'pure-store/react'
 
 import { EditInPlace, ProgressButton} from './components'
 import defaultMapConfig from './default-map-config'
@@ -113,7 +113,7 @@ type BottomControlsProps = {
 }
 const BottomControls = ({start, end, onSave}: BottomControlsProps)=> {
   const [saving, setSaving] = React.useState(false)
-  const [{ name, date }, update] = usePureStore(store)
+  const [{ name, date }, update] = store.usePureStore()
 
   async function save() {
     if (saving) return null

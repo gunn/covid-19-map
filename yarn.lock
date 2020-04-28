@@ -6299,10 +6299,10 @@ punycode@^2.1.0, punycode@^2.1.1:
   resolved "https://registry.yarnpkg.com/punycode/-/punycode-2.1.1.tgz#b58b010ac40c22c5657616c8d2c2c02c7bf479ec"
   integrity sha512-XRsRjdf+j5ml+y/6GKHPZbrF/8p2Yga0JPtdqTIY2Xe5ohJPD9saDJJLPvp9+NSBprVvevdXZybnj2cv8OEd0A==
 
-pure-store@1.0.0:
-  version "1.0.0"
-  resolved "https://registry.yarnpkg.com/pure-store/-/pure-store-1.0.0.tgz#98c72809293508206f06185bafa4716db95fb9d5"
-  integrity sha512-aowC30DYIW+/W7JBJxfpHfad/XE9JXA/gp5oZTTrpc6UV4igb8Iq3SoNtUMozXr16bbgoACX6jYFReeKej12IA==
+pure-store@^1.0.1:
+  version "1.0.2"
+  resolved "https://registry.yarnpkg.com/pure-store/-/pure-store-1.0.2.tgz#1e4e5b1d18a02be6b8a8d02b2bce25c26989a777"
+  integrity sha512-JzkqtfaJUdTFBHYWOvbdn1sK1tWfYntf06cD9HFfLvQkhvPi4iCK/mK+lGAEoHJEPG/90p++KIgcrluGAREdeg==
   dependencies:
     immer "1.8.0 - 6"
   optionalDependencies:
