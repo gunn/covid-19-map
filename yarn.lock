@@ -4192,10 +4192,10 @@ image-size@~0.5.0:
   resolved "https://registry.yarnpkg.com/image-size/-/image-size-0.5.5.tgz#09dfd4ab9d20e29eb1c3e80b8990378df9e3cb9c"
   integrity sha1-Cd/Uq50g4p6xw+gLiZA3jfnjy5w=
 
-"immer@1.8.0 - 6":
-  version "6.0.3"
-  resolved "https://registry.yarnpkg.com/immer/-/immer-6.0.3.tgz#94d5051cd724668160a900d66d85ec02816f29bd"
-  integrity sha512-12VvNrfSrXZdm/BJgi/KDW2soq5freVSf3I1+4CLunUM8mAGx2/0Njy0xBVzi5zewQZiwM7z1/1T+8VaI7NkmQ==
+"immer@1.8.0 - 7":
+  version "7.0.5"
+  resolved "https://registry.yarnpkg.com/immer/-/immer-7.0.5.tgz#8af347db5b60b40af8ae7baf1784ea4d35b5208e"
+  integrity sha512-TtRAKZyuqld2eYjvWgXISLJ0ZlOl1OOTzRmrmiY8SlB0dnAhZ1OiykIDL5KDFNaPHDXiLfGQFNJGtet8z8AEmg==
 
 import-fresh@^2.0.0:
   version "2.0.0"
@@ -6299,14 +6299,12 @@ punycode@^2.1.0, punycode@^2.1.1:
   resolved "https://registry.yarnpkg.com/punycode/-/punycode-2.1.1.tgz#b58b010ac40c22c5657616c8d2c2c02c7bf479ec"
   integrity sha512-XRsRjdf+j5ml+y/6GKHPZbrF/8p2Yga0JPtdqTIY2Xe5ohJPD9saDJJLPvp9+NSBprVvevdXZybnj2cv8OEd0A==
 
-pure-store@^1.0.1:
-  version "1.0.2"
-  resolved "https://registry.yarnpkg.com/pure-store/-/pure-store-1.0.2.tgz#1e4e5b1d18a02be6b8a8d02b2bce25c26989a777"
-  integrity sha512-JzkqtfaJUdTFBHYWOvbdn1sK1tWfYntf06cD9HFfLvQkhvPi4iCK/mK+lGAEoHJEPG/90p++KIgcrluGAREdeg==
+pure-store@^1.0.2:
+  version "1.2.0"
+  resolved "https://registry.yarnpkg.com/pure-store/-/pure-store-1.2.0.tgz#23df0dac0dfbb1446f7c0f479ab5af865f78796d"
+  integrity sha512-pOJhlWJZ8Z0hq+q/EhRpQes06ZyYZgdnNd4PWXWD30U7VW0t95EBZ1ty0pVSgUvQifiPp3Z0M7YDBa6rZiKphg==
   dependencies:
-    immer "1.8.0 - 6"
-  optionalDependencies:
-    react "^16.13.1"
+    immer "1.8.0 - 7"
 
 purgecss@^1.4.0:
   version "1.4.2"
