@@ -68,8 +68,8 @@ const StatsStore = new class {
 
     const dates = rows.map(d=> +new Date(d.date))
 
-    this.first = new Date(Math.min(...dates))
-    this.last  = new Date(Math.max(...dates))
+    this.first = new Date(dates.reduce((p, v)=> p < v ? p : v))
+    this.last  = new Date(dates.reduce((p, v)=> p > v ? p : v))
 
 
     const byNum = []
