@@ -14,6 +14,9 @@ type Row = {
   date: string
 
   fips: string
+
+  casesForDay?: number
+  deathsForDay?: number
 }
 const StatsStore = new class {
   rows: Row[] = []
@@ -41,10 +44,10 @@ const StatsStore = new class {
 
     function blendRowData(a: Row, b: Row) {
       const data = {}
-      ;["cases", "deaths", "casesPer100K", "deathsPer100K"].forEach(field=> {
+      ;["cases", "deaths", "casesForDay", "deathsForDay", "casesPer100K", "deathsPer100K"].forEach(field=> {
         data[field] = ((a?.[field]||0)*(1-proportion)) + (b[field]*proportion)
       })
-      ;["cases", "deaths"].forEach(field=> {
+      ;["cases", "deaths", "casesForDay", "deathsForDay"].forEach(field=> {
         data[field] = Math.round(data[field])
       })
       return data
@@ -75,7 +78,7 @@ const StatsStore = new class {
     const byNum = []
     const byIdByNum = []
 
-    this.maxStats = { lat: 35, long: -40, deaths: 0, cases: 0, deathsPer100K: 0, casesPer100K: 0 }
+    this.maxStats = { lat: 35, long: -40, deaths: 0, cases: 0, casesForDay: 0, deathsForDay: 0, deathsPer100K: 0, casesPer100K: 0 }
 
     rows.forEach(row=> {
       RegionsStore.add(row)
@@ -87,19 +90,45 @@ const StatsStore = new class {
 
       byIdByNum[dayNumber] || (byIdByNum[dayNumber] = {})
       byIdByNum[dayNumber][this.idForRow(row)] = row
-
-      ;["cases", "deaths", "casesPer100K", "deathsPer100K"].forEach(field=>
-        (row[field]>this.maxStats[field]) && (this.maxStats[field]=row[field])
-      )
     })
 
     this.rowsByDayNumber     = byNum
     this.rowsByIdByDayNumber = byIdByNum
     // this.zeroFillRows()
+    this.addPerDayData()
+
+    rows.forEach(row=> {
+      ;["cases", "deaths", "casesForDay", "deathsForDay", "casesPer100K", "deathsPer100K"].forEach(field=>
+        (row[field]>this.maxStats[field]) && (this.maxStats[field]=row[field])
+      )
+    })
+  }
+
+  addPerDayData() {
+    RegionsStore.all.forEach(region=> {
+      const id = this.idForRow(region)
+
+      const firstRow = this.rowsByIdByDayNumber[0][id]
+      if (firstRow) {
+        firstRow.casesForDay = 0
+        firstRow.deathsForDay = 0
+      }
+
+      for (let i=1; i<this.rowsByDayNumber.length; i++) {
+
+        const row = this.rowsByIdByDayNumber[i][id]
+        if (row) {
+          const prevRow = this.rowsByIdByDayNumber[i-1][id] ?? { cases: 0, deaths: 0 }
+
+          row.casesForDay  = row.cases  - prevRow.cases
+          row.deathsForDay = row.deaths - prevRow.deaths
+        }
+      }
+    })
   }
 
   zeroFillRows() {
-    const zeroData = { deaths: 0, cases: 0, deathsPer100K: 0, casesPer100K: 0 }
+    const zeroData = { deaths: 0, cases: 0, deathsForDay: 0, casesForDay: 0, deathsPer100K: 0, casesPer100K: 0 }
     const lastDay = this.rowsByDayNumber[this.dayNumberForDate(this.last)]
 
     RegionsStore.all.forEach(region=> {
@@ -158,6 +187,8 @@ function processForMap(rawData: any[]) {
     {name: 'population',    type: 'integer'},
     {name: 'cases',         type: 'integer'},
     {name: 'deaths',        type: 'integer'},
+    {name: 'casesForDay',   type: 'integer'},
+    {name: 'deathsForDay',  type: 'integer'},
     {name: 'casesPer100K',  type: 'real'},
     {name: 'deathsPer100K', type: 'real'},
     {name: 'date',          type: 'timestamp'},
